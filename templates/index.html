@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support Bot</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="chat-wrapper">
+        <header class="header">
+            <h1>Customer Support</h1>
+        </header>
+        <div class="chat-container" id="chat-container">
+            <!-- Messages will dynamically populate here -->
+        </div>
+        <div class="chat-input-wrapper">
+            <input 
+                type="text" 
+                id="user-input" 
+                placeholder="Type your message..." 
+                autocomplete="off" 
+                aria-label="Type your message"
+                autofocus
+                
+            />
+            <button id="voice-btn" onclick="startRecording()">🎙</button>
+            <button id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <div id="recording-popup" class="popup hidden">
+        <div class="popup-content">
+            <p>🎤 Recording... Speak now!</p>
+            <p id="transcript-display">Listening...</p>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
