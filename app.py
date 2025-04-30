@@ -49,7 +49,7 @@ doc_chunks = text_splitter.split_documents(document)
 # Initialize LLM and memory
 llm = ChatGroq(
     api_key=GROQ_API_KEY,
-    model="llama-3.1-70b-versatile",
+    model="llama-3.3-70b-versatile",
     temperature=0.5
 )
 retriever = vector_store.as_retriever()
@@ -65,12 +65,12 @@ chain = ConversationalRetrievalChain.from_llm(
     verbose=True
 )
 
-if not is_data_already_indexed(index, len(doc_chunks)):
-    uuids = [str(uuid4()) for _ in range(len(doc_chunks))]
-    vector_store = PineconeVectorStore(embedding=embeddings, index=index)
-    vector_store.add_documents(documents=doc_chunks, ids=uuids)
-else:
-    print("Data is already indexed. Skipping re-indexing.")
+#if not is_data_already_indexed(index, len(doc_chunks)):
+ #   uuids = [str(uuid4()) for _ in range(len(doc_chunks))]
+  #  vector_store = PineconeVectorStore(embedding=embeddings, index=index)
+   # vector_store.add_documents(documents=doc_chunks, ids=uuids)
+#else:
+print("Data is already indexed. Skipping re-indexing.")
 
 
 
@@ -97,7 +97,7 @@ def chat():
     user_input = request.json.get("message")
     
     # Create a prompt for the LLM
-    prompt = "You are a helpful customer care executive. Act as an empathetic human and be polite and precise give structured point wise answer. User input: "
+    prompt = "You are a helpful customer care executive. Act as an empathetic human and be polite and precise give structured answer, dont let user know that you are a bot. User input: "
     full_input = prompt + user_input
 
     # Invoke the model and get a response
