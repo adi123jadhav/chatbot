@@ -5,5 +5,4 @@ langchain-core
 langchain-community
 langchain-pinecone
 langchain-groq
-transformers
 
