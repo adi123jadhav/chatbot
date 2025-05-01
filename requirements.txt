@@ -1,24 +1,7 @@
-# Web framework
-Flask>=2.0
+Flask==2.0.3
 
-# Env var loader
-python-dotenv>=1.0
-
-# HTTP client
-requests>=2.28
-
-# Pinecone client
-pinecone-client>=2.2
-
-# LangChain core libraries
-langchain-core>=0.0.250
-langchain-community>=0.0.50
-langchain-pinecone>=0.0.20
-langchain-groq>=0.0.10
-
-# (Optional) If you end up using any vendored utilities,
-# you might need langchain (umbrella) too:
-langchain>=0.0.250
-
-# If you use langgraph:
-langgraph>=0.1.0
+pinecone-client==2.2.2
+langchain-core==0.0.250
+langchain-community==0.0.50
+langchain-pinecone==0.0.20
+langchain-groq==0.0.10
