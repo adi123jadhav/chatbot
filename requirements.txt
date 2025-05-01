@@ -1,7 +1,7 @@
-Flask==2.0.3
+Flask
 
-pinecone-client==2.2.2
-langchain-core==0.0.250
-langchain-community==0.0.50
-langchain-pinecone==0.0.20
-langchain-groq==0.0.10
+pinecone-client
+langchain-core
+langchain-community
+langchain-pinecone
+langchain-groq
