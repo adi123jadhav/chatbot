@@ -50,10 +50,13 @@ memory = ConversationBufferMemory(
 chain = ConversationalRetrievalChain.from_llm(
     llm=llm,
     retriever=retriever,
-    chain_type="map_reduce",
     memory=memory,
-    verbose=True
+    verbose=False,
+    max_tokens_limit=2048,
+    return_source_documents=False,
+    chain_type="stuff"  # Simpler than map_reduce
 )
+
 
 #if not is_data_already_indexed(index, len(doc_chunks)):
  #   uuids = [str(uuid4()) for _ in range(len(doc_chunks))]
