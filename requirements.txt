@@ -1,7 +1,6 @@
 Flask
-gunicorn
+
 pinecone-client
-langchain-core
 langchain-community
 langchain-pinecone
 langchain-groq
