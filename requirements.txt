@@ -1,7 +1,7 @@
 Flask
-
+transformers
 pinecone-client
 langchain-community
 langchain-pinecone
 langchain-groq
-tiktoken
+
