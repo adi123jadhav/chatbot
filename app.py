@@ -16,6 +16,7 @@ from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain_core.documents import Document
+from langchain_pinecone.embeddings import PineconeEmbeddings
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 LANGCHAIN_API_KEY = "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"
@@ -29,7 +30,10 @@ app = Flask(__name__)
 pc = Pinecone(PINECONE_API_KEY)
 index = pc.Index("consumercare")
 # Initialize embeddings and vector store
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+embeddings = PineconeEmbeddings(
+    api_key=PINECONE_API_KEY,
+    model="multilingual-e5-large",
+)
 
 
 def is_data_already_indexed(index, expected_count):
