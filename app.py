@@ -13,7 +13,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 
 from langchain_pinecone.embeddings import PineconeEmbeddings
-os.environ["LANGCHAIN_TOKENIZERS"] = "tiktoken"  
+
 
 GROQ_API_KEY = "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"
 PINECONE_API_KEY = "pcsk_7dC9j_PafKN332jv8kQ88VxCgwpVQyGYZHWFerKa34HZA42TA9jn9ezgQTHhZVZf23yDb"
