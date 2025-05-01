@@ -1,7 +1,4 @@
 from flask import Flask, render_template, request, jsonify,redirect
-from langchain_core.messages import HumanMessage
-from langchain.prompts import PromptTemplate
-from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 from uuid import uuid4
@@ -9,12 +6,12 @@ from dotenv import load_dotenv
 import os
 import json
 import requests
-from  langchain.text_splitter import RecursiveCharacterTextSplitter
+
 
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from langchain_core.documents import Document
+
 from langchain_pinecone.embeddings import PineconeEmbeddings
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -35,19 +32,10 @@ embeddings = PineconeEmbeddings(
 )
 
 
-def is_data_already_indexed(index, expected_count):
-    """Check if the dataset is already indexed."""
-    stats = index.describe_index_stats()
-    return stats.get("total_vector_count", 0) >= expected_count
 
-
-loader = CSVLoader("Bitext_Sample_Customer_Support_Training_Dataset_27K_responses-v11.csv",encoding="utf-8")
-document = loader.load()
 
 vector_store = PineconeVectorStore(embedding=embeddings, index=index)
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=0)
-doc_chunks = text_splitter.split_documents(document)
 
 # Initialize LLM and memory
 llm = ChatGroq(
