@@ -1,10 +1,10 @@
 langchain_core
 langchain_community
 langchain
-langserve
+
 flask
 langchain_pinecone
-langchain_google_genai
+
 langgraph
-langchain_huggingface
+
 langchain_groq
