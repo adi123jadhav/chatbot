@@ -16,7 +16,7 @@ from langchain_pinecone.embeddings import PineconeEmbeddings
 
 
 GROQ_API_KEY = "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"
-PINECONE_API_KEY = "pcsk_7dC9j_PafKN332jv8kQ88VxCgwpVQyGYZHWFerKa34HZA42TA9jn9ezgQTHhZVZf23yDb"
+PINECONE_API_KEY = "pcsk_5oproE_Q8tohtQZPyhJv5b7LkMiqsGBN26YGuQx7Ekxyqdvn3tPWCJ17WYqgVNE7J6ERuT"
 app = Flask(__name__)
 
 
