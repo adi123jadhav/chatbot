@@ -1,5 +1,5 @@
 Flask
-transformers
+
 pinecone-client
 langchain-community
 langchain-pinecone
