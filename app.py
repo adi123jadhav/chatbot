@@ -53,7 +53,6 @@ chain = ConversationalRetrievalChain.from_llm(
     retriever=retriever,
     memory=memory,
     verbose=False,
-    max_tokens_limit=2048,
     return_source_documents=False,
     chain_type="stuff"  # Simpler than map_reduce
 )
