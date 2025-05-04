@@ -23,7 +23,7 @@ app = Flask(__name__)
 # Load initial documents
 
 pc = Pinecone(PINECONE_API_KEY)
-index = pc.Index("consumercare")
+index = pc.Index("hello")
 # Initialize embeddings and vector store
 embeddings = PineconeEmbeddings(
     api_key=PINECONE_API_KEY,
