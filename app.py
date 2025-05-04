@@ -14,6 +14,7 @@ from langchain.chains import ConversationalRetrievalChain
 
 from langchain_pinecone.embeddings import PineconeEmbeddings
 
+os.environ["LANGCHAIN_TOKENIZERS"] = "tiktoken"
 
 GROQ_API_KEY = "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"
 PINECONE_API_KEY = "pcsk_5oproE_Q8tohtQZPyhJv5b7LkMiqsGBN26YGuQx7Ekxyqdvn3tPWCJ17WYqgVNE7J6ERuT"
