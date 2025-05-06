@@ -121,9 +121,10 @@ def chat():
             verbose=True,
             return_source_documents=True,
             chain_type="stuff",
+            output_key="answer",                             # <— specify which output to store
             combine_docs_chain_kwargs={
                 "prompt": CUSTOMER_SUPPORT_PROMPT.partial(lang=user_lang)
-            }
+            },
         )
         app.logger.debug("Initialized ConversationalRetrievalChain")
 
@@ -134,7 +135,6 @@ def chat():
         # Safely grab the answer
         answer = response.get("answer", None)
         if answer is None:
-            # Try alternate key
             answer = response.get("answers", [""])[0] if response.get("answers") else ""
         app.logger.debug(f"Extracted answer: {answer!r}")
 
