@@ -116,7 +116,12 @@ def chat():
             memory=memory,
             verbose=False,
             return_source_documents=False,
-            chain_type="stuff"  # Simpler than map_reduce
+            #chain_type="stuff"  # Simpler than map_reduce
+            combine_docs_chain_kwargs={
+                "prompt": CUSTOMER_SUPPORT_PROMPT.partial(lang=user_lang)
+            }
+            
+
         )
 
         # Process query
