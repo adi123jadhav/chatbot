@@ -4,4 +4,4 @@ pinecone-client
 langchain-community
 langchain-pinecone
 langchain-groq
-
+langdetect
