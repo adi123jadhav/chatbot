@@ -21,7 +21,8 @@ app = Flask(__name__)
 
 GROQ_API_KEY = "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"
 PINECONE_API_KEY = "pcsk_28nk7X_JU7vRP8FrELuPW84XdhXUSKa3mH8n4LdQw6aXzpFAUgmzC7peQQ25Atpk67M2MU"
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "default-secret-key")
+app.secret_key = "your-very-secure-random-key"
+
 
 # Initialize Pinecone
 pc = Pinecone(PINECONE_API_KEY)
@@ -109,7 +110,7 @@ def chat():
         # Initialize chain with custom prompt
         chain = ConversationalRetrievalChain.from_llm(
             llm=llm,
-            retriever=retriever,
+            retriever=vector_store.as_retriever(),
             memory=memory,
             verbose=False,
             return_source_documents=False,
