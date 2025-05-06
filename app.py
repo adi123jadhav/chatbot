@@ -4,7 +4,7 @@ from pinecone import Pinecone
 from uuid import uuid4
 from dotenv import load_dotenv
 import os
-from langdetect import detect  # For language detection
+from langdetect import detect
 
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
@@ -109,7 +109,7 @@ def chat():
         app.logger.debug(f"User input: {user_input!r}")
         try:
             user_lang = detect(user_input) if user_input else "en"
-        except Exception:
+        except:
             user_lang = "en"
         app.logger.debug(f"Detected language: {user_lang}")
 
@@ -119,9 +119,8 @@ def chat():
             retriever=vector_store.as_retriever(),
             memory=memory,
             verbose=True,
-            return_source_documents=True,
+            return_source_documents=False,      # ← only "answer" comes back
             chain_type="stuff",
-            output_key="answer",                             # <— specify which output to store
             combine_docs_chain_kwargs={
                 "prompt": CUSTOMER_SUPPORT_PROMPT.partial(lang=user_lang)
             },
@@ -132,10 +131,8 @@ def chat():
         response = chain.invoke({"question": user_input})
         app.logger.debug(f"Raw LLM response: {response}")
 
-        # Safely grab the answer
-        answer = response.get("answer", None)
-        if answer is None:
-            answer = response.get("answers", [""])[0] if response.get("answers") else ""
+        # Extract the answer
+        answer = response.get("answer", "")
         app.logger.debug(f"Extracted answer: {answer!r}")
 
         formatted = format_response(answer)
@@ -143,7 +140,6 @@ def chat():
         return jsonify({"response": formatted})
 
     except Exception as e:
-        # Log full stack trace
         traceback.print_exc()
         app.logger.error(f"Error in /chat: {e}", exc_info=True)
         return jsonify({"error": str(e)}), 500
