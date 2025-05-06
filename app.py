@@ -73,8 +73,7 @@ You are empathetic, solution-focused, and never reveal you're an AI.
 **User Query**: {question}
 
 **Response Requirements**:
-- Keep under 150 words
-- Use bullet points with • for complex steps
+
 - Include exact URL links from knowledge base when relevant
 - If unsure: "Let me connect you to a specialist for this!"
 """
@@ -155,7 +154,6 @@ def format_response(resp: str) -> str:
         body = resp.replace("\n", "<br>")
     return f"""
     <div class='response-box'>
-      <div class='avatar'>🤖</div>
       <div class='content'>{body}</div>
     </div>
     """
