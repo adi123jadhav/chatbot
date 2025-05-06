@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, jsonify, session
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
@@ -12,17 +11,19 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts import PromptTemplate
 from langchain_pinecone.embeddings import PineconeEmbeddings
+import traceback
+
+# Ensure tokenizer env var
 os.environ["LANGCHAIN_TOKENIZERS"] = "tiktoken"
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "your-very-secure-random-key")
 
-GROQ_API_KEY = "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"
-PINECONE_API_KEY = "pcsk_28nk7X_JU7vRP8FrELuPW84XdhXUSKa3mH8n4LdQw6aXzpFAUgmzC7peQQ25Atpk67M2MU"
-app.secret_key = "your-very-secure-random-key"
-
+GROQ_API_KEY     = os.getenv("GROQ_API_KEY",     "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")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY", "pcsk_28nk7X_JU7vRP8FrELuPW84XdhXUSKa3mH8n4LdQw6aXzpFAUgmzC7peQQ25Atpk67M2MU")
 
 # Initialize Pinecone
 pc = Pinecone(PINECONE_API_KEY)
@@ -79,7 +80,6 @@ You are empathetic, solution-focused, and never reveal you're an AI.
 """
 )
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -92,7 +92,8 @@ def chat():
         if not session_id:
             session_id = str(uuid4())
             session['session_id'] = session_id
-        
+        app.logger.debug(f"Session ID: {session_id}")
+
         # Initialize or retrieve session memory
         if session_id not in session_memories:
             session_memories[session_id] = ConversationBufferMemory(
@@ -100,60 +101,68 @@ def chat():
                 return_messages=True,
                 return_chat_history=True
             )
+            app.logger.debug("Created new ConversationBufferMemory")
         memory = session_memories[session_id]
 
         # Detect user language
-        user_input = request.json.get("message")
+        user_input = request.json.get("message", "")
+        app.logger.debug(f"User input: {user_input!r}")
         try:
-            user_lang = detect(user_input)
-        except:
-            user_lang = "en"  # Fallback to English
+            user_lang = detect(user_input) if user_input else "en"
+        except Exception:
+            user_lang = "en"
+        app.logger.debug(f"Detected language: {user_lang}")
 
-        # Initialize chain with custom prompt
+        # Build the chain with your custom prompt
         chain = ConversationalRetrievalChain.from_llm(
             llm=llm,
             retriever=vector_store.as_retriever(),
             memory=memory,
-            verbose=False,
-            return_source_documents=False,
-            #chain_type="stuff"  # Simpler than map_reduce
+            verbose=True,
+            return_source_documents=True,
+            chain_type="stuff",
             combine_docs_chain_kwargs={
                 "prompt": CUSTOMER_SUPPORT_PROMPT.partial(lang=user_lang)
             }
-            
-
         )
+        app.logger.debug("Initialized ConversationalRetrievalChain")
 
-        # Process query
-        response = chain.invoke({
-            "question": user_input,
-            "lang": user_lang
-        })
+        # Invoke the chain
+        response = chain.invoke({"question": user_input})
+        app.logger.debug(f"Raw LLM response: {response}")
 
-        # Format response
-        d=response.get("answer", "I'm sorry do you want me to connect you to an human agent?")
-        formatted_response = format_response(d)
-        
-        return jsonify({"response": formatted_response})
+        # Safely grab the answer
+        answer = response.get("answer", None)
+        if answer is None:
+            # Try alternate key
+            answer = response.get("answers", [""])[0] if response.get("answers") else ""
+        app.logger.debug(f"Extracted answer: {answer!r}")
+
+        formatted = format_response(answer)
+        app.logger.debug(f"Formatted response HTML: {formatted!r}")
+        return jsonify({"response": formatted})
 
     except Exception as e:
+        # Log full stack trace
+        traceback.print_exc()
+        app.logger.error(f"Error in /chat: {e}", exc_info=True)
         return jsonify({"error": str(e)}), 500
 
-def format_response(response):
-    """Convert LLM output to HTML-friendly format"""
-    # Convert bullets to HTML list
-    response = response.replace("• ", "<li>").replace("\n", "</li>")
-    if "<li>" in response:
-        response = f"<ul>{response}</ul>"
-    
-    # Add basic styling
+def format_response(resp: str) -> str:
+    """Convert LLM output to HTML-friendly format."""
+    lines = resp.splitlines()
+    items = [line.lstrip("• ").strip() for line in lines if line.strip().startswith("•")]
+    if items:
+        list_html = "".join(f"<li>{item}</li>" for item in items)
+        body = f"<ul>{list_html}</ul>"
+    else:
+        body = resp.replace("\n", "<br>")
     return f"""
     <div class='response-box'>
-        <div class='avatar'>🤖</div>
-        <div class='content'>
-            {response.replace("**", "<strong>").replace("</strong>", "</strong> ")}
-        </div>
+      <div class='avatar'>🤖</div>
+      <div class='content'>{body}</div>
     </div>
     """
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=True)
