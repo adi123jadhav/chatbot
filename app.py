@@ -126,7 +126,8 @@ def chat():
         })
 
         # Format response
-        formatted_response = format_response(response["answer"])
+        d=response.get("answer", "I'm sorry do you want me to connect you to an human agent?")
+        formatted_response = format_response(d)
         
         return jsonify({"response": formatted_response})
 
