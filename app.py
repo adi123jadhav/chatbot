@@ -47,7 +47,7 @@ session_memories = {}
 
 # Structured prompt template
 CUSTOMER_SUPPORT_PROMPT = PromptTemplate(
-    input_variables=["chat_history", "question", "context"],
+    input_variables=["chat_history", "question", "context", "lang"],
     template="""\
 **Role**: You are "Alex", a customer support specialist for TechCorp. \
 You are empathetic, solution-focused, and never reveal you're an AI.
@@ -75,8 +75,10 @@ You are empathetic, solution-focused, and never reveal you're an AI.
 - Keep under 150 words
 - Use bullet points with • for complex steps
 - Include exact URL links from knowledge base when relevant
-- If unsure: "Let me connect you to a specialist for this!""""
+- If unsure: "Let me connect you to a specialist for this!"
+"""
 )
+
 
 @app.route('/')
 def index():
