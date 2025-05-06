@@ -17,14 +17,14 @@ from langchain_pinecone.embeddings import PineconeEmbeddings
 os.environ["LANGCHAIN_TOKENIZERS"] = "tiktoken"
 
 GROQ_API_KEY = "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"
-PINECONE_API_KEY = "pcsk_5oproE_Q8tohtQZPyhJv5b7LkMiqsGBN26YGuQx7Ekxyqdvn3tPWCJ17WYqgVNE7J6ERuT"
+PINECONE_API_KEY = "pcsk_28nk7X_JU7vRP8FrELuPW84XdhXUSKa3mH8n4LdQw6aXzpFAUgmzC7peQQ25Atpk67M2MU"
 app = Flask(__name__)
 
 
 # Load initial documents
 
 pc = Pinecone(PINECONE_API_KEY)
-index = pc.Index("hello")
+index = pc.Index("chatbot")
 # Initialize embeddings and vector store
 embeddings = PineconeEmbeddings(
     api_key=PINECONE_API_KEY,
